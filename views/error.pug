@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  .container
+    .row.justify-content-center
+      .col-md-8.text-center
+        .card
+          .card-body
+            h1.display-4.text-danger Ops!
+            p.lead= message
+            if error
+              pre.bg-light.p-3.rounded
+                code= JSON.stringify(error, null, 2)
+            a.btn.btn-primary.mt-3(href="/") Voltar para a página inicial 

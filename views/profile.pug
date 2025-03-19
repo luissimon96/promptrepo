@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  .row.justify-content-center
+    .col-md-8
+      .card
+        .card-body
+          h3.card-title.text-center.mb-4 Perfil do Usuário
+          .row
+            .col-md-4.text-center
+              img.rounded-circle.mb-3(src=user.picture, alt="Foto de perfil", style="width: 150px; height: 150px; object-fit: cover;")
+            .col-md-8
+              h4= user.name
+              p.text-muted= user.email
+              if user.email_verified
+                span.badge.bg-success Email verificado
+              else
+                span.badge.bg-warning Email não verificado
+          
+          .mt-4
+            h5 Assinatura
+            if user.subscription
+              p.text-success Assinante Premium
+            else
+              p.text-muted Usuário Básico
+              a.btn.btn-primary(href="/subscription") Fazer upgrade 

@@ -1,0 +1,59 @@
+extends layout
+
+block content
+  .container
+    .row.justify-content-center
+      .col-md-8
+        .card
+          .card-body.text-center
+            h2.card-title.mb-4 Apoie o PromptRepo
+            
+            .pricing-details.mb-4
+              p.lead.text-muted Contribua com qualquer valor para ajudar a manter o projeto
+              p.text-primary.font-italic "Para manter meu café sagrado de cada dia ☕"
+            
+            .features.mb-4
+              h4 Por que apoiar?
+              ul.list-unstyled
+                li.mb-2
+                  i.fas.fa-heart.text-danger.me-2
+                  | Ajuda a manter o projeto online
+                li.mb-2
+                  i.fas.fa-coffee.text-warning.me-2
+                  | Mantém o desenvolvedor cafeinado
+                li.mb-2
+                  i.fas.fa-code.text-success.me-2
+                  | Incentiva novas funcionalidades
+            
+            #paymentSection.payment-section
+              if qrCodeData
+                .qr-code-container.mb-3
+                  img.img-fluid(src=qrCodeData alt="QR Code PIX")
+                .copy-section.mb-3
+                  p.mb-2 Ou copie minha chave PIX:
+                  .input-group
+                    input.form-control(type="text" value=pixCopyPaste readonly)
+                    button.btn.btn-outline-primary(onclick="copyPixCode()") Copiar
+                .alert.alert-info.mt-3
+                  | Muito obrigado pelo seu apoio! ❤️
+              else
+                form(action="/subscription/generate-pix" method="POST")
+                  button.btn.btn-primary.btn-lg(type="submit") Mostrar Chave PIX
+            
+            .payment-instructions.mt-4
+              small.text-muted
+                | 1. Abra seu app do banco
+                br
+                | 2. Escaneie o QR code ou cole a chave PIX
+                br
+                | 3. Digite o valor que deseja contribuir
+                br
+                | 4. Confirme o envio
+
+  script.
+    function copyPixCode() {
+      const pixInput = document.querySelector('input[readonly]');
+      pixInput.select();
+      document.execCommand('copy');
+      alert('Chave PIX copiada!');
+    } 

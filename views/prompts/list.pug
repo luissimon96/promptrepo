@@ -1,0 +1,45 @@
+extends ../layout
+
+block content
+  .container
+    .row.mb-4
+      .col-md-8
+        h1.display-4= `Prompts de ${category.charAt(0).toUpperCase() + category.slice(1)}`
+      .col-md-4.text-end
+        if isAdmin
+          a.btn.btn-primary(href=`/prompts/${category}/new`) Novo Prompt
+
+    .row
+      if prompts.length === 0
+        .col-12
+          .alert.alert-info Nenhum prompt encontrado nesta categoria.
+      else
+        each prompt in prompts
+          .col-md-4.mb-4
+            .card.h-100
+              .card-body
+                h5.card-title= prompt.title
+                p.card-text= prompt.description
+                .mb-3
+                  each tag in prompt.tags
+                    span.badge.bg-secondary.me-1= tag
+                if isAdmin
+                  .btn-group.w-100
+                    a.btn.btn-outline-primary(href=`/prompts/${category}/${prompt.id}/edit`) Editar
+                    form.d-inline(method="POST" action=`/prompts/${category}/${prompt.id}/delete` style="flex: 1;")
+                      button.btn.btn-outline-danger.w-100(type="submit" onclick="return confirm('Tem certeza que deseja excluir este prompt?')") Excluir
+                else
+                  button.btn.btn-primary.w-100(data-bs-toggle="modal" data-bs-target=`#promptModal${prompt.id}`) Ver Prompt
+
+    each prompt in prompts
+      .modal.fade(id=`promptModal${prompt.id}` tabindex="-1")
+        .modal-dialog.modal-lg
+          .modal-content
+            .modal-header
+              h5.modal-title= prompt.title
+              button.btn-close(data-bs-dismiss="modal")
+            .modal-body
+              pre.bg-light.p-3.rounded
+                code= prompt.content
+            .modal-footer
+              button.btn.btn-secondary(data-bs-dismiss="modal") Fechar 
