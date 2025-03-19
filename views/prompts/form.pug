@@ -1,0 +1,35 @@
+extends ../layout
+
+block content
+  .container
+    .row.justify-content-center
+      .col-md-8
+        .card
+          .card-body
+            h3.card-title.text-center.mb-4= prompt.id ? 'Editar Prompt' : 'Novo Prompt'
+            
+            form(method="POST" action=`/prompts/${category}${prompt.id ? '/' + prompt.id : ''}`)
+              .mb-3
+                label.form-label(for="title") Título
+                input#title.form-control(type="text" name="title" value=prompt.title required)
+              
+              .mb-3
+                label.form-label(for="description") Descrição
+                textarea#description.form-control(name="description" rows="3" required)= prompt.description
+              
+              .mb-3
+                label.form-label(for="content") Conteúdo do Prompt
+                textarea#content.form-control(name="content" rows="10" required)= prompt.content
+              
+              .mb-3
+                label.form-label(for="tags") Tags (separadas por vírgula)
+                input#tags.form-control(type="text" name="tags" value=prompt.tags ? prompt.tags.join(', ') : '')
+              
+              .mb-3
+                .form-check
+                  input#isPublic.form-check-input(type="checkbox" name="isPublic" checked=prompt.isPublic)
+                  label.form-check-label(for="isPublic") Prompt Público
+              
+              .d-grid.gap-2
+                button.btn.btn-primary(type="submit")= prompt.id ? 'Atualizar' : 'Criar'
+                a.btn.btn-secondary(href=`/prompts/${category}`) Cancelar 

@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  .row
+    .col-md-12.text-center.mb-5
+      h1.display-4 Bem-vindo ao PromptRepo
+      p.lead Sua biblioteca de prompts para IA
+
+  if isAuthenticated
+    .row
+      .col-md-4
+        .card.mb-4
+          .card-body
+            h5.card-title Prompts de Texto
+            p.card-text Acesse nossa coleção de prompts para geração de texto.
+            a.btn.btn-primary(href="/prompts/texto") Ver Prompts
+      .col-md-4
+        .card.mb-4
+          .card-body
+            h5.card-title Prompts de Imagem
+            p.card-text Explore prompts para geração de imagens.
+            a.btn.btn-primary(href="/prompts/imagem") Ver Prompts
+      .col-md-4
+        .card.mb-4
+          .card-body
+            h5.card-title Prompts de Código
+            p.card-text Descubra prompts para assistência em programação.
+            a.btn.btn-primary(href="/prompts/codigo") Ver Prompts
+  else
+    .row.justify-content-center
+      .col-md-6.text-center
+        .card
+          .card-body
+            h5.card-title Faça login para acessar os prompts
+            p.card-text Crie uma conta ou faça login para ter acesso a nossa biblioteca completa de prompts.
+            a.btn.btn-primary(href="/login") Entrar 
