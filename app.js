@@ -8,19 +8,10 @@ const subscriptionController = require('./controllers/subscriptionController');
 
 const app = express();
 
-// Configuração do Auth0
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  secret: process.env.SESSION_SECRET,
-  baseURL: process.env.BASE_URL || 'http://localhost:4040',
-  clientID: process.env.AUTH0_CLIENT_ID,
-  issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL
-};
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Configuração de sessão
 app.use(session({
@@ -34,14 +25,23 @@ app.use(session({
 }));
 
 // Configuração do Auth0
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: process.env.SESSION_SECRET,
+  baseURL: process.env.BASE_URL || 'http://localhost:4040',
+  clientID: process.env.AUTH0_CLIENT_ID,
+  issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
+  routes: {
+    callback: '/callback'
+  }
+};
+
 app.use(auth(config));
 
 // Configuração do Pug
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
-
-// Servir arquivos estáticos
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware para verificar se é admin
 const isAdmin = (req, res, next) => {
@@ -199,6 +199,20 @@ app.post('/prompts/:category/:id/delete', isAdmin, async (req, res) => {
 app.get('/subscription', subscriptionController.showSubscriptionPage);
 app.post('/subscription/generate-pix', subscriptionController.generatePix);
 app.post('/webhook/pix', subscriptionController.webhookPix);
+
+// Middleware para tratar erros de autenticação
+app.get('/callback', (req, res) => {
+  const error = req.query.error;
+  const error_description = req.query.error_description;
+  
+  if (error === 'user_exists') {
+    return res.redirect('/?error=user_exists');
+  } else if (error) {
+    return res.redirect(`/?error=${error}&error_description=${encodeURIComponent(error_description)}`);
+  }
+  
+  res.redirect('/');
+});
 
 // Tratamento de erros
 app.use((err, req, res, next) => {
